@@ -14,8 +14,8 @@ import requetereponse.Reponse;
  */
 public class reponseEBOOP implements Reponse, Serializable
 {
-    public static int ACK = 101;
-    public static int FAIL = 201;
+    public static int ACK = 601;
+    public static int FAIL = 701;
     
     private int code;
     private String data;

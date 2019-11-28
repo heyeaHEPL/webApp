@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import requetereponse.Requete;
 
 /**
@@ -24,14 +26,14 @@ import requetereponse.Requete;
  */
 public class requeteEBOOP implements Requete,Serializable
 {
-    public static int REQSTART = 0;
-    public static int REQLOG = 1;
-    public static int REQ_GET_TRAV = 2;
-    public static int REQ_BOOK = 3;
-    public static int REQ_SET_PAN = 4;
-    public static int REQ_GET_PAN = 5;
-    public static int REQ_DEL_PAN = 6;
-    public static int REQ_BUY = 7;
+    public static int REQSTART = 30;
+    public static int REQLOG = 31;
+    public static int REQ_GET_TRAV = 32;
+    public static int REQ_BOOK = 33;
+    public static int REQ_SET_PAN = 34;
+    public static int REQ_GET_PAN = 35;
+    public static int REQ_DEL_PAN = 36;
+    public static int REQ_BUY = 37;
     
     private static int CAPACITE_NAVIRE = 1;
     private static int MATRICULE_NAVIRE = 2;
@@ -62,6 +64,10 @@ public class requeteEBOOP implements Requete,Serializable
         data = dat;
     }
 
+    public String getChargeUtile()
+    {
+        return data;
+    }
     @Override
     public Runnable createRunnable(Socket s, ObjectOutputStream oos, ObjectInputStream ois) {
         this.oos=oos;
@@ -76,8 +82,16 @@ public class requeteEBOOP implements Requete,Serializable
         else return null;           
     }
     
-    private void requeteStart(Socket s)
+    public void requeteStart(Socket s)
     {
+        try {
+            oos=(ObjectOutputStream)s.getOutputStream();
+            ois=(ObjectInputStream)s.getInputStream();
+            connectToDatabase();
+        } catch (IOException ex) {
+            System.err.println("requeteEBOOP : requeteStart : "+ex);
+        }
+        
         reponseEBOOP rep;
         rep = new reponseEBOOP(reponseEBOOP.ACK,getData());
         send(rep);
